@@ -2,7 +2,7 @@ import random
 import StringIO
  
 from flask import Flask, make_response
-import numpy
+
 import matplotlib
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -14,6 +14,7 @@ app.config['DEBUG'] = True
 # Note: We don't need to call run() since our application is embedded within
 # the App Engine WSGI application server.
 
+import textLegibility
 
 @app.route('/')
 def form():
@@ -160,13 +161,15 @@ addLoadEvent(prepareInputsForHints);
  
 @app.route('/plot.png')
 def plot():
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
- 
-    xs = range(100)
-    ys = [random.randint(1, 50) for x in xs]
- 
-    axis.plot(xs, ys)
+
+    display = textLegibility.Display(1920, 1080, 
+                                     diagonal=23.9, 
+                                     aspect_ratio=16.0/9.0,
+                                     bottom=51.0)
+    fig = textLegibility.plot(display, z_distance=28.0, 
+              isopleth_label_xpos=26.2, show_inset=True,
+              font_sizes=[10, 12, 14, 16, 18], guideline=16)
+              
     canvas = FigureCanvas(fig)
     output = StringIO.StringIO()
     canvas.print_png(output)
