@@ -1,7 +1,7 @@
 import random
 import StringIO
  
-from flask import Flask, make_response
+from flask import Flask, request, make_response
 
 import matplotlib
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -111,10 +111,9 @@ function prepareInputsForHints() {
 }
 addLoadEvent(prepareInputsForHints);
 </script>
-
 <h1 style="font-family:Helvetica;">iLegible</h1>
 <h2 style="font-family:Helvetica;">Text Legibility Analysis for Standing Workstations</h2>
-
+<form action="/submit" method="post">
 <h3>Display Specifications</h3>
 <dl>
 	<dt>
@@ -135,7 +134,7 @@ addLoadEvent(prepareInputsForHints);
 		<label for="diagonal">Diagonal Measurement (inches):</label>
 	</dt>
 	<dd>
-		<input id="diagonal" name="diagonal" type="number" required="true" min="0.0001" max="1000"  value="23.9"/>
+		<input id="diagonal" name="diagonal" type="number" required="true" min="1" max="1000" step="any" value="23.9"/>
 		<span class="hint">Specify the horizontal dimension of the display in decimal inches.<span class="hint-pointer">&nbsp;</span></span>
 	</dd>
 </dl>
@@ -145,20 +144,41 @@ addLoadEvent(prepareInputsForHints);
 		<label for="vertical">Vertical Dimension:</label>
 	</dt>
 	<dd>
-		<input id="vertical" name="vertical" type="number" required="true" min="0" max="240" value="51"/>
+		<input id="vertical" name="vertical" type="number" required="true" min="0" max="240" step="any" value="51"/>
 		<span class="hint">Specify the vertical distance from the floor to the bottom of the display in decimal inches.<span class="hint-pointer">&nbsp;</span></span>
 	</dd>
 	<dt>
 		<label for="horizontal">Horizontal Dimension:</label>
 	</dt>
 	<dd>
-		<input id="horizontal" name="horizontal" type="number" required="true" min="1" max="240" step="1" value="26"/>
+		<input id="horizontal" name="horizontal" type="number" required="true" min="1" max="240" step="any" value="26"/>
 		<span class="hint">Specify the horizontal distance from the front of the screen to the operator's eyepoint. If the operator is standing at a bench control board assume the eyepoint is 3 inches pass the front edge.<span class="hint-pointer">&nbsp;</span></span>
 	</dd>
 </dl>
 <input type="submit" class="button" value="Submit" />
+</form>
 '''
  
+@app.route('/submit', methods = ['POST'])
+def submit():
+    xRes = int(request.form['xRes'])
+    yRes = int(request.form['yRes'])
+    aspectRatio = float(xRes) / float(yRes)
+    diagonal = float(request.form['diagonal'])
+    horizontal = float(request.form['horizontal'])
+    vertical = float(request.form['vertical'])
+    
+    display = textLegibility.Display(xRes, yRes, 
+                                     diagonal=diagonal, 
+                                     aspect_ratio=aspectRatio,
+                                     bottom=vertical)
+    rv = textLegibility.plot(display, z_distance=28.0, 
+              isopleth_label_xpos=26.2, show_inset=True,
+              font_sizes=[10, 12, 14, 16, 18], guideline=16)
+            
+    return """<img src="data:image/png;base64,%s"/>""" % rv.getvalue().encode("base64").strip()
+    
+
 @app.route('/plot.png')
 def plot():
 

@@ -277,7 +277,7 @@ def plot(display, z_distance=None, pop=50, sitting=False,
     ymax_pdf = 0.15
     
     # create and setup the figure
-    fig = plt.figure(figsize=(12,14))
+    plt.figure(figsize=(12,14))
     plt.subplots_adjust(top=0.77, right=0.89, left=0.08, bottom=0.25)
     fig_aspect = (0.89 - 0.08) / (0.76 - 0.10)
 
@@ -485,13 +485,8 @@ def plot(display, z_distance=None, pop=50, sitting=False,
         plt.text(80, -0.05, _str(m_pct_t), horizontalalignment='right', verticalalignment='top', fontdict=dict(color='#666666'))
         plt.text(80, -0.07, _str(pop_pct_t), horizontalalignment='right', verticalalignment='top')
     
-    return fig
+    rv = StringIO.StringIO()
+    plt.savefig(rv, format="png")
+    plt.clf()
     
-if __name__ == '__main__':
-    display20L = Display(1920, 1080, 
-                        diagonal=23.9, aspect_ratio=16.0/9.0,
-                        bottom=51.0)
-
-    plt = plot(display20L, z_distance=28.0, isopleth_label_xpos=26.2, show_inset=True,
-               font_sizes=[10, 12, 14, 16, 18], guideline=16, fname='24inchDisplay.png')
-    plt.close()
+    return rv
