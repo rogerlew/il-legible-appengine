@@ -8,9 +8,9 @@ and ISO 9241-3.
 Author: Roger Lew
         roger.lew@inl.gov
 
-Date: 8/2/2014
+Last modified: 5/11/2015
 
-Version: 1.0
+Version: 1.1
 """
 
 import math
@@ -223,7 +223,8 @@ def normpdf2(x, mu, sigma):
 
 def plot(display, z_distance=None, pop=50, sitting=False,
          font_sizes=[10, 11, 12, 13, 14, 16, 18], 
-         fname=None, isopleth_label_xpos=None, show_inset=False, guideline=16):
+         fname=None, isopleth_label_xpos=None, show_inset=False, 
+         guideline=16, save_as_pdf=False):
     """
     Creates a figure depicting viewing angle in MOA as a function of
     viewing distance, and font size. Font size is dependent on the
@@ -486,7 +487,7 @@ def plot(display, z_distance=None, pop=50, sitting=False,
         plt.text(80, -0.07, _str(pop_pct_t), horizontalalignment='right', verticalalignment='top')
     
     rv = StringIO.StringIO()
-    plt.savefig(rv, format="png")
+    plt.savefig(rv, format=("png", "pdf")[save_as_pdf])
     plt.clf()
     
     return rv
