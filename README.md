@@ -1,3 +1,3 @@
 # il-legible-appengine
 
-https://il-legible.appspot.com/
+<strike>https://il-legible.appspot.com/</strike>
