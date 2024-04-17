@@ -81,31 +81,28 @@ def serialize(xRes, yRes, diagonal, vertical, horizontal, sitting):
     
 def deserialize(s):
     tokens = s.split(',')
-    return ( float(tokens[0]), 
+    return ( int(tokens[0]), 
              int(tokens[1]), 
-             int(tokens[2]), 
+             float(tokens[2]), 
              float(tokens[3]), 
-             float(tokens[4]), 
-             float(tokens[5]),
-             bool(tokens[6]) )
+             float(tokens[4]),
+             bool(tokens[5]) )
     
 @app.route('/<path:path>.pdf')
 def pdf(path):
-    dt, xRes, yRes, diagonal, vertical, horizontal, sitting = deserialize(path)
+    xRes, yRes, diagonal, vertical, horizontal, sitting = deserialize(path)
     aspect_ratio = float(xRes) / float(yRes)
     
     display = textLegibility.Display(xRes, yRes, 
                                      diagonal=diagonal, 
                                      aspect_ratio=aspect_ratio,
-                                     bottom=vertical,
-                                     sitting=sitting)
+                                     bottom=vertical)
          
     data = serialize(xRes, yRes, diagonal, vertical, horizontal, sitting)
 
     rv = textLegibility.plot(display, z_distance=28.0, 
-             isopleth_label_xpos=26.2, show_inset=True,
-             font_sizes=[10, 12, 14, 16, 18], guideline=16, 
-             save_as_pdf=True)
+             isopleth_label_xpos=26.2, show_inset=True, guideline=16, 
+             sitting=sitting, save_as_pdf=True)
 
     return send_file(rv,
                      attachment_filename=f'il-legible_{data}.pdf',
@@ -121,7 +118,6 @@ def submit_response():
     horizontal = request.form.get('horizontal', 26)
     sitting = 'sitting' in request.form
 
-    print(request.form)
     
     data = serialize(xRes, yRes, diagonal, vertical, horizontal, sitting)
     
@@ -138,8 +134,7 @@ def submit_response():
                                      bottom=vertical)
     
     rv = textLegibility.plot(display, z_distance=28.0, 
-             isopleth_label_xpos=26.2, show_inset=True,
-             font_sizes=[10, 12, 14, 16, 18], guideline=16)
+             isopleth_label_xpos=26.2, show_inset=True, sitting=sitting, guideline=16)
     
     rv_data = base64.b64encode(rv.read()).decode('utf-8')
 

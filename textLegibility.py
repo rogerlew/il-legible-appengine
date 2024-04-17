@@ -222,7 +222,7 @@ def normpdf2(x, mu, sigma):
     return y
 
 def plot(display, z_distance=None, pop=50, sitting=False,
-         font_sizes=[10, 11, 12, 13, 14, 16, 18], 
+         font_sizes=None, 
          fname=None, isopleth_label_xpos=None, show_inset=False, 
          guideline=16, save_as_pdf=False):
     """
@@ -239,6 +239,17 @@ def plot(display, z_distance=None, pop=50, sitting=False,
     axis limits should be divisible by 5.
     """
     
+    if font_sizes is None:
+            
+        font_sizes=[10, 12, 14, 16, 18]
+
+        if display.hor_res >= 2560:
+            font_sizes = [14, 16, 18, 20, 24]
+
+        if display.hor_res >= 3840:
+            font_sizes = [18, 20, 24, 28, 32]
+
+
     if (z_distance is None):
         heights = []
     else: 
@@ -494,6 +505,7 @@ def plot(display, z_distance=None, pop=50, sitting=False,
     plt.savefig(rv, format=("png", "pdf")[save_as_pdf])
     plt.clf()
     rv.seek(0)
+    
 
     return rv 
    
