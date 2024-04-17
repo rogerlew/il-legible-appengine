@@ -49,13 +49,13 @@ app.config['DEBUG'] = True
 import textLegibility
 
 @app.route('/')
-def main_response(xRes='1920', yRes='1080', diagonal='23.9', 
-                  vertical='51', horizontal='26'):
+def main_response(xRes=1920, yRes=1080, diagonal=23.9, 
+                  vertical=51, horizontal=26, sitting=False):
     
     return render_template("main.html", 
                            xRes=xRes, yRes=yRes,
                            diagonal=diagonal, vertical=vertical,
-                           horizontal=horizontal, 
+                           horizontal=horizontal, sitting=sitting,
                            submitcontent='Run Analysis',
                            data=None, rv=None)
 
@@ -76,42 +76,32 @@ def get_utc_timestamp():
     utc = datetime.now()
     return (utc - datetime(1970, 1, 1)).total_seconds()
     
-def serialize(xRes, yRes, diagonal, vertical, horizontal):
-    # This offers very rudimentary obfuscation. 
-    # Chances are if you got here trying to break it you
-    # are more than capable of using the TextLegibility
-    # module to do whatever it is that you want to do.
-    # Please don't reverse engineer this to provide persistent 
-    # hotlinks. The free bandwidth provided by appengine is
-    # very limited.
-    timestamp = get_utc_timestamp() #- 24*60*60 -1
-    s = "%f,%s,%s,%s,%s,%s" %(timestamp, xRes, yRes, diagonal, vertical, horizontal)
-    return s #urlsafe_b64encode(s)
+def serialize(xRes, yRes, diagonal, vertical, horizontal, sitting):
+    return f"{xRes},{yRes},{diagonal},{vertical},{horizontal},{sitting}"
     
 def deserialize(s):
-#    uenc = s.decode('utf-8')
-#    s2 = urlsafe_b64decode(uenc.encode("utf-8"))
-    
     tokens = s.split(',')
     return ( float(tokens[0]), 
              int(tokens[1]), 
              int(tokens[2]), 
              float(tokens[3]), 
              float(tokens[4]), 
-             float(tokens[5]) )
+             float(tokens[5]),
+             bool(tokens[6]) )
     
 @app.route('/<path:path>.pdf')
 def pdf(path):
-    dt, xRes, yRes, diagonal, vertical, horizontal = deserialize(path)
+    dt, xRes, yRes, diagonal, vertical, horizontal, sitting = deserialize(path)
     aspect_ratio = float(xRes) / float(yRes)
     
     display = textLegibility.Display(xRes, yRes, 
                                      diagonal=diagonal, 
                                      aspect_ratio=aspect_ratio,
-                                     bottom=vertical)
+                                     bottom=vertical,
+                                     sitting=sitting)
          
-    data = serialize(xRes, yRes, diagonal, vertical, horizontal)
-    
+    data = serialize(xRes, yRes, diagonal, vertical, horizontal, sitting)
+
     rv = textLegibility.plot(display, z_distance=28.0, 
              isopleth_label_xpos=26.2, show_inset=True,
              font_sizes=[10, 12, 14, 16, 18], guideline=16, 
@@ -122,15 +112,18 @@ def pdf(path):
                      as_attachment=True)
                      
     
-@app.route('/submit', methods=['GET'])
+@app.route('/submit', methods=['POST'])
 def submit_response():
-    xRes = request.form.get('xRes', '1920')
-    yRes = request.form.get('yRes', '1080')
-    diagonal = request.form.get('diagonal', '23.9')
-    vertical = request.form.get('vertical', '51')
-    horizontal = request.form.get('horizontal', '26')
+    xRes = request.form.get('xRes', 1920)
+    yRes = request.form.get('yRes', 1080)
+    diagonal = request.form.get('diagonal', 23.9)
+    vertical = request.form.get('vertical', 51)
+    horizontal = request.form.get('horizontal', 26)
+    sitting = 'sitting' in request.form
+
+    print(request.form)
     
-    data = serialize(xRes, yRes, diagonal, vertical, horizontal)
+    data = serialize(xRes, yRes, diagonal, vertical, horizontal, sitting)
     
     xRes = int(xRes)
     yRes = int(yRes)
@@ -154,15 +147,10 @@ def submit_response():
                            xRes=xRes, yRes=yRes,
                            diagonal=diagonal, vertical=vertical,
                            horizontal=horizontal, 
+                           sitting=sitting,
                            submitcontent='Rerun Analysis',
                            data=data,
                            rv_data=rv_data)
-
-@app.errorhandler(404)
-def page_not_found(e):
-    """Return a custom 404 error."""
-    return 'Sorry, nothing at this URL.', 404
-
 
 if __name__ == "__main__":
     app.run(debug=True)

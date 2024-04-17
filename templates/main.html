@@ -8,7 +8,7 @@
 
 <div class="maincontent" >
     <h2>Text Legibility Analysis for Standing Workstations</h2>
-    <form action="/submit" method="get">
+    <form action="/submit" method="post">
     <h3>Display Specifications</h3>
     <dl>
         <dt>
@@ -88,7 +88,20 @@
                    value="{{horizontal}}" 
                    style="width:100pt;"/>
             <span class="hint">Specify the horizontal distance from the front of the screen to the operator's eyepoint.</span>
-        </dd><dt>
+        </dd>
+        <dt>
+            <label for="sitting">Sitting Workstation:</label>
+        </dt>
+        <dd>
+            <input id="sitting" 
+                name="sitting" 
+                type="checkbox" 
+                required 
+                value="true" 
+                {% if sitting %}checked{% endif %} />
+            <span class="hint">Specify whether this is a seated workstation.</span>
+        </dd>
+        <dt>
         </dt>
         <dd>
             <input type="submit" 
