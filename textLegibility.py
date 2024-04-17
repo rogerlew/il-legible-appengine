@@ -14,11 +14,11 @@ Version: 1.1
 """
 
 import math
-import StringIO
 import numpy as np
 from numpy import pi
 
-import matplotlib
+import base64
+from io import BytesIO
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib import pyplot as plt
@@ -315,9 +315,11 @@ def plot(display, z_distance=None, pop=50, sitting=False,
     # set the x and y limits, specify the ticks and turn on the grid
     plt.xlim([xmin, xmax])
     plt.ylim([ymin, ymax])
-    yticks = np.linspace(ymin, ymax, (ymax - ymin) / 1.0 + 1.0)
+
+    yticks = np.linspace(ymin, ymax, int((ymax - ymin) / 1.0 + 1.0))
     plt.yticks(yticks)#, [('','%i'%t)[t%5==0] for t in yticks])
-    xticks = np.linspace(xmin, xmax, (xmax - xmin) / 2.0 + 1.0)
+
+    xticks = np.linspace(xmin, xmax, int((xmax - xmin) / 2.0 + 1.0))
     plt.xticks(xticks)#, [('','%i'%t)[t%4==0] for t in xticks])
     plt.grid(which='both')
     
@@ -420,7 +422,7 @@ def plot(display, z_distance=None, pop=50, sitting=False,
                  
     # Distribution adherence analysis
     ehts = np.array([Person(h).eyeheight for h in hts])
-    for i in xrange(min(5,len(font_sizes))):
+    for i in range(min(5,len(font_sizes))):
         fs = font_sizes[i]
         
         ax = plt.axes([0.08 + i*0.166, 0.07, 0.11*(4.0/3.0), 0.11])
@@ -486,8 +488,12 @@ def plot(display, z_distance=None, pop=50, sitting=False,
         plt.text(80, -0.05, _str(m_pct_t), horizontalalignment='right', verticalalignment='top', fontdict=dict(color='#666666'))
         plt.text(80, -0.07, _str(pop_pct_t), horizontalalignment='right', verticalalignment='top')
     
-    rv = StringIO.StringIO()
+
+    rv = BytesIO()
+
     plt.savefig(rv, format=("png", "pdf")[save_as_pdf])
     plt.clf()
-    
-    return rv
+    rv.seek(0)
+
+    return rv 
+   

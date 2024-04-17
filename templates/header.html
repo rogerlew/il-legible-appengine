@@ -1,0 +1,224 @@
+
+<style type="text/css">
+    p, label {
+        font-family: Helvetica;
+        font-size: 14pt;
+    }
+    
+    .hangingindent {
+      padding-left: 1em ;
+      text-indent: -1em ;
+    } 
+    
+    h2, h3 {
+        font-family: Helvetica;
+        font-weight: bold;
+    }
+    
+    h3 {
+        font-size: 15pt;
+        margin: 0 0 -4pt 0;
+    }
+    
+    div.header {
+        background-color: #888888;
+        padding: 0.2em 2em 0.2em 2em;
+        width: 100%; 
+        overflow: hidden;
+    }
+    
+    div.footer {
+        color: #fff;
+        text-align=center;
+        height:3em;
+        background-color: #888888;
+        width: 100%; 
+    }
+    
+    div.footercontent {
+        font-family: Helvetica;
+        position: relative;
+        width: 40em;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    div.title {   
+        font-family: 'Times New Roman', serif;
+        font-weight: 800;
+        color: #fff;
+        font-size: 42px;
+        width: 30%; 
+        float: left;
+    }
+    
+    div.navigation { 
+        font-size: 16pt;
+        font-family: Helvetica;
+        color: #fff;
+        height: 2.5em;
+        margin-left: 40%;
+        text-align: right;
+        padding: 0 2em 0 0;
+    }
+    
+    div.navcontent {
+        font-family: Helvetica;
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    div.maincontent {
+        width: 90%;
+        max-width: 800pt;
+        margin: 0 auto;
+    }
+    div.pcontent {
+        max-width: 600pt;
+    }
+    
+    dl {
+        font:normal 12pt/15pt Helvetica;
+        width: 500pt;
+    }
+    dt {
+       
+        width: 300pt;
+        padding: 0 0 0 0;
+    }
+    dd {
+        width: 100pt;
+        margin: 0;
+        padding: 0 0 16pt 0;
+    }
+    
+    img.result {
+        display: block;
+        margin-left: auto;
+        margin-right: auto 
+    }
+    
+    a {
+        text-decoration: none;
+        color: #666;
+    }
+    a {
+        font-family: Helvetica;
+        font-size: 14pt;
+        text-decoration: none;
+        color: #666;
+    }
+    
+    a.aheader {
+        font-size: 16pt;
+        text-decoration: none;
+        color: #fff;
+    }
+    a.aheader:hover {
+         color: #fff;
+    }
+    
+    a.afooter {
+        font-size: 10pt;
+        text-decoration: none;
+        color: #fff;
+    }
+    a.afooter:hover {
+         color: #fff;
+    }
+    
+    .hint {
+        font:normal 12pt/15pt Helvetica;
+           display: none;
+        position: absolute;
+        margin-left: 12px;
+        padding: 4pt 12pt;
+        width: 200pt;
+          background: #ccc;
+        border: 2px solid #888888;
+        line-height = 15pt;
+    }
+    .hint:after, .hint:before {
+        right: 100%;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    
+    .hint:after {
+        border-color: rgba(204, 204, 204, 0);
+        border-right-color: #ccc;
+        top: 8pt;
+        border-width: 10px;
+        margin-top: -10px;
+    }
+    .hint:before {
+        border-color: rgba(136, 136, 136, 0);
+        border-right-color: #888888;
+        top: 8pt;
+        border-width: 12px;
+        margin-top: -12px;
+    }
+    
+    </style>
+    <script type="text/javascript">
+    function addLoadEvent(func) {
+      var oldonload = window.onload;
+      if (typeof window.onload != 'function') {
+        window.onload = func;
+      } else {
+        window.onload = function() {
+          oldonload();
+          func();
+        }
+      }
+    }
+    
+    function prepareInputsForHints() {
+        var inputs = document.getElementsByTagName("input");
+        for (var i=0; i<inputs.length; i++){
+            // test to see if the hint span exists first
+            if (inputs[i].parentNode.getElementsByTagName("span")[0]) {
+                // the span exists!  on focus, show the hint
+                inputs[i].onfocus = function () {
+                    this.parentNode.getElementsByTagName("span")[0].style.display = "inline";
+                }
+                // when the cursor moves away from the field, hide the hint
+                inputs[i].onblur = function () {
+                    this.parentNode.getElementsByTagName("span")[0].style.display = "none";
+                }
+            }
+        }
+        // repeat the same tests as above for selects
+        var selects = document.getElementsByTagName("select");
+        for (var k=0; k<selects.length; k++){
+            if (selects[k].parentNode.getElementsByTagName("span")[0]) {
+                selects[k].onfocus = function () {
+                    this.parentNode.getElementsByTagName("span")[0].style.display = "inline";
+                }
+                selects[k].onblur = function () {
+                    this.parentNode.getElementsByTagName("span")[0].style.display = "none";
+                }
+            }
+        }
+    }
+    addLoadEvent(prepareInputsForHints);
+    
+    </script>
+    <div class="header">
+        <div class="title">illegible</div>
+        <div class="navigation">
+            <div class="navcontent">
+              <a class="aheader" href="/">tool</a> |
+              <a class="aheader" href="/doc">doc</a> |
+              <a class="aheader" href="/about">about</a> |
+              <a class="aheader" href="/legal">legal</a>
+            </div>
+        </div>
+    </div>

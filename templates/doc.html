@@ -1,0 +1,43 @@
+
+<html>
+<head>
+    <title>il-legible Documentation</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+{% include 'header.html' %}
+<div class="maincontent">
+    <h2>Documentation</h2>
+        <div class="pcontent">
+            <p>This tool is intended to aid qualified professionals in the assessment of the legibility of text presented on a 
+            digital display for the purposes designing and and analysing human machine interfaces in accordance NUREG-0700
+            and ISO 9241-3.</p>
+            <p>Given a display (such as an LCD screen) of a known size and resolution at a fixed location this tool calculates
+            how well different sized fonts presented on the display will accomodate users of varying statures. The tool models
+            population height distributions for both sexes based on means and averages identified in MIL-STD 1472G.</p>
+        </div>
+        <h3>Interpreting the figure</h3>
+        <div class="pcontent">
+            <p>The assumptions of the model are provided in the top left corner.</p>
+            <p>To the right of the models assumptions is a figure depicting the vertical distance from the user's eye to the 
+            farthest vertical location on the screen (either the top or bottom) as a function of stature. View angle is depicted
+            in teal. A view angle of zero indicates the center of the screen is perpendicular to the user's gaze. Negative view 
+            angles indicate the user would be looking up at the screen, positive angles indicate the user would be looking 
+            down.</p>
+            <p>The table in the top right corner lists the font sizes used in the analysis and their cooresponding physical heights
+            in inches and millimeters</p>
+            <p>The main figure depicts viewing angle in minutes of arc (MOA) as a function of viewing distance in (inches) and font size.
+            The isopleths indicate contours of constant font size. Viewing distance is a function of the display's placement, the 
+            horizontal distance from the display to the user, and the user's stature. In the analysis all of these factors are 
+            fixed except for stature so a monotonic relation exists between viewing distance and stature.</p>
+            <p>The green horizontal line indicates the threshold for NUREG-0700 compliance. For a given viewing distance a font size 
+            is compliant if it is above this line.</p>
+            <p>The bottom figures depict how a given font will satisfy the potential population distribution of users. The probabliity 
+            density functions for females and males are shaded in light gray. For each distribution the percentiles satisfied by the font
+            size are shaded in green. The tables underneath each lists the lower (L) and upper (U) bounds as well as the total (T)
+            percentage of the populations accomodated by the font size.</p>
+        </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

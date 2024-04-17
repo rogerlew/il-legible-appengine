@@ -1,0 +1,110 @@
+<html>
+<head>
+    <title>Text Legibility Analysis for Standing Workstations</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+{% include 'header.html' %}
+
+<div class="maincontent" >
+    <h2>Text Legibility Analysis for Standing Workstations</h2>
+    <form action="/submit" method="get">
+    <h3>Display Specifications</h3>
+    <dl>
+        <dt>
+            <label for="xRes">Horizontal Resolution (pixels):</label>
+        </dt>
+        <dd>
+            <input id="xRes" 
+                   name="xRes" 
+                   type="number" 
+                   required="true" 
+                   min="1" 
+                   max="8192" 
+                   step="1" 
+                   value="{{xRes}}" 
+                   style="width:100pt;"/>
+            <span class="hint">Specify the horizontal resolution of the display.</span>
+        </dd>
+        <dt>
+            <label for="yRes">Vertical Resolution (pixels):</label>
+        </dt>
+        <dd>
+            <input id="yRes" 
+                   name="yRes" 
+                   type="number" 
+                   required="true" 
+                   min="1" 
+                   max="8192" 
+                   step="1" 
+                   value="{{yRes}}" 
+                   style="width:100pt;"/>
+            <span class="hint">Specify the vertical resolution of the display.</span>
+        </dd>
+        <dt>
+            <label for="diagonal">Diagonal Measurement (inches):</label>
+        </dt>
+        <dd>
+            <input id="diagonal" 
+                   name="diagonal" 
+                   type="number" 
+                   required="true" 
+                   min="1" 
+                   max="1000" 
+                   step="any" 
+                   value="{{diagonal}}" 
+                   style="width:100pt;"/>
+            <span class="hint">Specify the horizontal dimension of the display in decimal inches.</span>
+        </dd>
+    </dl>
+    <h3>Display Placement</h3>
+    <dl>
+        <dt>
+            <label for="vertical">Vertical Dimension(inches):</label>
+        </dt>
+        <dd>
+            <input id="vertical" 
+                   name="vertical" 
+                   type="number" 
+                   required="true" 
+                   min="0" 
+                   max="240" 
+                   step="any" 
+                   value="{{vertical}}" 
+                   style="width:100pt;"/>
+            <span class="hint">Specify the vertical distance from the floor to the bottom of the display in decimal inches.</span>
+        </dd>
+        <dt>
+            <label for="horizontal">Horizontal Dimension(inches):</label>
+        </dt>
+        <dd>
+            <input id="horizontal" 
+                   name="horizontal" 
+                   type="number" 
+                   required="true" 
+                   min="1" 
+                   max="240" 
+                   step="any" 
+                   value="{{horizontal}}" 
+                   style="width:100pt;"/>
+            <span class="hint">Specify the horizontal distance from the front of the screen to the operator's eyepoint.</span>
+        </dd><dt>
+        </dt>
+        <dd>
+            <input type="submit" 
+                   class="button" 
+                   value="{{submitcontent}}"  
+                   style="width:180pt; height:36pt;font-size:18px;" 
+                   onClick="this.form.submit(); this.disabled=true; this.value='Please wait...'; ">
+        </dd>
+    </dl>
+    </form>
+    {% if data is not none %}
+        <h3>Results</h3>
+        <a href="/{{data}}.pdf">Download PDF</a>
+        <img class="result" src="data:image/png;base64,{{rv_data}}"/>
+    {% endif %}
+    </div>
+    {% include 'footer.html' %}
+</body>
+</html>
